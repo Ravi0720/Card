@@ -1,449 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personalized New Year Card</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ New Year Magic Card ✨</title>
 
-        #background-slideshow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-        }
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-        .bg-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-        }
+<style>
+:root {
+  --gold: #ffd700;
+  --glass: rgba(255,255,255,0.15);
+  --blur: blur(16px);
+}
 
-        .bg-img.active {
-            opacity: 1;
-        }
+* {
+  box-sizing: border-box;
+}
 
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4));
-            z-index: -1;
-            pointer-events: none;
-        }
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  overflow-x: hidden;
+}
 
-        #snow-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
+/* ================= BACKGROUND ================= */
+#background {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+}
 
-        .snowflake {
-            position: absolute;
-            color: #fff;
-            font-size: 1em;
-            line-height: 1;
-            pointer-events: none;
-            z-index: 0;
-            animation: snowfall linear infinite;
-        }
+#background img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
 
-        @keyframes snowfall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
+#background img.active {
+  opacity: 1;
+}
 
-        #content {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    rgba(0,0,0,0.45),
+    rgba(0,0,0,0.55)
+  );
+  z-index: -1;
+}
 
-        #input-section {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 40px 20px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 1s ease-in-out;
-            width: 90%;
-            max-width: 400px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+/* ================= SNOW ================= */
+.snow {
+  position: fixed;
+  top: -10px;
+  color: white;
+  opacity: .8;
+  pointer-events: none;
+  animation: fall linear infinite;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+  }
+}
 
-        #input-section h1 {
-            font-size: clamp(1.5em, 5vw, 2em);
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
+/* ================= CONTAINER ================= */
+.container {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
 
-        #nameInput {
-            padding: 12px;
-            font-size: 1.2em;
-            border: none;
-            border-radius: 25px;
-            width: 100%;
-            max-width: 250px;
-            margin-bottom: 20px;
-            text-align: center;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
-        }
+/* ================= INPUT CARD ================= */
+.input-card,
+.main-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  border-radius: 28px;
+  padding: 32px 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.25);
+  animation: fadeUp .8s ease forwards;
+}
 
-        button {
-            padding: 12px 30px;
-            font-size: 1.1em;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 250px;
-        }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
+.input-card h1 {
+  font-size: clamp(1.6rem, 5vw, 2rem);
+  margin-bottom: 20px;
+}
 
-        #card-section {
-            display: none;
-            text-align: center;
-            animation: slideIn 1s ease-out;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 30px;
+  border: none;
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 20px;
+  outline: none;
+}
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(50px) scale(0.8); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(45deg, #ff6b6b, #feca57);
+  color: #000;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
 
-        .card {
-            background: rgba(255, 255, 255, 0.15);
-            padding: clamp(30px, 8vw, 50px);
-            border-radius: 30px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+button:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+}
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: sparkle 3s infinite linear;
-        }
+/* ================= MAIN CARD ================= */
+.main-card {
+  display: none;
+  max-width: 520px;
+}
 
-        @keyframes sparkle {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+.main-card h2 {
+  font-size: clamp(2rem, 6vw, 2.5rem);
+  margin-bottom: 10px;
+}
 
-        .card h2 {
-            font-size: clamp(2em, 6vw, 2.5em);
-            margin-bottom: 20px;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-        }
+#username {
+  color: var(--gold);
+}
 
-        #userName {
-            color: #ffd700;
-            font-style: italic;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
+.section {
+  margin: 22px 0;
+}
 
-        .reflection-section, .wishes-section {
-            margin: 20px 0;
-        }
+.section-title {
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
 
-        .reflection-image, .new-year-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-        }
+.section img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
 
-        .reflection-image:hover, .new-year-image:hover {
-            transform: scale(1.02);
-        }
+.message {
+  font-size: 1rem;
+  line-height: 1.7;
+  animation: glow 2s infinite alternate;
+}
 
-        .section-title {
-            font-size: 1.4em;
-            color: #ffd700;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-        }
+@keyframes glow {
+  from { text-shadow: 0 0 10px rgba(255,215,0,.4); }
+  to { text-shadow: 0 0 22px rgba(255,215,0,.9); }
+}
 
-        .wishes {
-            font-size: clamp(1em, 4vw, 1.3em);
-            line-height: 1.6;
-            margin-top: 20px;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
+/* ================= CONFETTI ================= */
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: confetti 3s linear forwards;
+  pointer-events: none;
+}
 
-        @keyframes glow {
-            from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-            to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.4); }
-        }
+@keyframes confetti {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
 
-        /* Enhanced confetti effect */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #ffd700;
-            animation: confetti-fall 3s linear infinite;
-            pointer-events: none;
-            z-index: 1000;
-            border-radius: 50%;
-        }
-
-        @keyframes confetti-fall {
-            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-
-        /* Media queries for better mobile experience */
-        @media (max-width: 480px) {
-            body {
-                height: 100vh;
-                overflow-y: auto;
-            }
-
-            #input-section {
-                padding: 30px 15px;
-                margin: 10px;
-            }
-
-            .card {
-                margin: 10px;
-                padding: 25px 15px;
-            }
-
-            .wishes p {
-                font-size: 1.1em;
-            }
-
-            .reflection-image, .new-year-image {
-                height: 150px;
-            }
-
-            /* Reduce confetti and snow on small screens */
-            .confetti {
-                width: 8px;
-                height: 8px;
-            }
-
-            .snowflake {
-                font-size: 0.8em;
-            }
-        }
-
-        @media (orientation: landscape) and (max-height: 500px) {
-            #input-section, .card {
-                padding: 20px;
-            }
-
-            #input-section h1 {
-                font-size: 1.5em;
-            }
-
-            .reflection-image, .new-year-image {
-                height: 120px;
-            }
-        }
-    </style>
+/* ================= RESPONSIVE ================= */
+@media (max-width: 480px) {
+  .section img {
+    height: 140px;
+  }
+}
+</style>
 </head>
+
 <body>
-    <div id="background-slideshow">
-        <img class="bg-img active" src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Winter forest serenity">
-        <img class="bg-img" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Golden sunset horizon">
-        <img class="bg-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Aurora lights in the sky">
-        <img class="bg-img" src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Beach sunrise reflection">
-        <img class="bg-img" src="https://images.unsplash.com/photo-1501436513145-30f24e19fcc8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Majestic mountain peaks">
+
+<!-- Background -->
+<div id="background">
+  <img class="active" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4">
+  <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e">
+  <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e">
+</div>
+<div id="overlay"></div>
+
+<div class="container">
+
+  <!-- INPUT -->
+  <div class="input-card" id="inputCard">
+    <h1>✨ Enter Your Name ✨</h1>
+    <input id="nameInput" placeholder="Your name" maxlength="20">
+    <button onclick="openCard()">Open Magic Card 🎁</button>
+  </div>
+
+  <!-- CARD -->
+  <div class="main-card" id="mainCard">
+    <h2>Happy New Year, <span id="username"></span> 🎉</h2>
+
+    <div class="section">
+      <div class="section-title">Reflecting on 2025 🌅</div>
+      <img src="https://images.unsplash.com/photo-1441205188609-b875e92a9807">
     </div>
 
-    <div id="overlay"></div>
-
-    <div id="snow-container"></div>
-
-    <div id="content">
-        <div id="input-section">
-            <h1>✨ Enter Your Name to Open the Magic! ✨</h1>
-            <input type="text" id="nameInput" placeholder="Your Name" maxlength="20">
-            <br>
-            <button onclick="openCard()">🌟 Open New Year Card 🌟</button>
-        </div>
-
-        <div id="card-section">
-            <div class="card">
-                <!-- Reflection on last year -->
-                <div class="reflection-section">
-                    <div class="section-title">Reflecting on Beautiful 2025 🌅</div>
-                    <img class="reflection-image" src="https://images.unsplash.com/photo-1441205188609-b875e92a9807?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80" alt="Sunset over mountains - Farewell to 2025">
-                </div>
-
-                <h2>Happy New Year, <span id="userName"></span>! 🎉</h2>
-
-                <!-- Wishes -->
-                <div class="wishes-section">
-                    <div class="wishes">
-                        <p>May 2026 shower you with endless joy, boundless success, and adventures that light up your soul. Here's to new beginnings, cherished memories, and dreams coming true! 🌅✨</p>
-                        <p>With love and sparkles, <br> The Universe 🌌</p>
-                    </div>
-                </div>
-
-                <!-- New Year welcome -->
-                <div class="reflection-section">
-                    <div class="section-title">Welcoming Serene 2026 ❄️</div>
-                    <img class="new-year-image" src="https://images.unsplash.com/photo-1514241516423-6c0a5e031aa2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Sunrise on icy mountain - Welcome to 2026">
-                </div>
-            </div>
-        </div>
+    <div class="section message">
+      May 2026 bring peace, success, love, and unforgettable moments into your life.
+      <br><br>
+      With warmth & magic ✨  
+      <br>— The Universe 🌌
     </div>
 
-    <script>
-        // Background slideshow
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.bg-img');
-        const slideInterval = 10000; // 10 seconds
+    <div class="section">
+      <div class="section-title">Welcoming 2026 ❄️</div>
+      <img src="https://images.unsplash.com/photo-1514241516423-6c0a5e031aa2">
+    </div>
+  </div>
 
-        function nextSlide() {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
+</div>
 
-        setInterval(nextSlide, slideInterval);
+<script>
+/* BACKGROUND SLIDES */
+const slides = document.querySelectorAll('#background img');
+let index = 0;
+setInterval(() => {
+  slides[index].classList.remove('active');
+  index = (index + 1) % slides.length;
+  slides[index].classList.add('active');
+}, 9000);
 
-        // Snowfall animation
-        function createSnowflakes() {
-            const snowContainer = document.getElementById('snow-container');
-            const numSnowflakes = window.innerWidth <= 480 ? 50 : 100; // Fewer on mobile
+/* SNOW */
+for (let i = 0; i < 50; i++) {
+  const s = document.createElement('div');
+  s.className = 'snow';
+  s.innerHTML = '❄';
+  s.style.left = Math.random() * 100 + 'vw';
+  s.style.fontSize = Math.random() * 10 + 10 + 'px';
+  s.style.animationDuration = Math.random() * 5 + 5 + 's';
+  document.body.appendChild(s);
+}
 
-            for (let i = 0; i < numSnowflakes; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                snowflake.innerHTML = '❄';
-                snowflake.style.left = Math.random() * 100 + 'vw';
-                snowflake.style.opacity = Math.random();
-                snowflake.style.fontSize = (Math.random() * 0.5 + 0.5) + 'em';
-                snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                snowflake.style.animationDelay = Math.random() * 2 + 's';
-                snowContainer.appendChild(snowflake);
+/* OPEN CARD */
+function openCard() {
+  const name = nameInput.value.trim();
+  if (!name) return alert('Please enter your name 🙂');
 
-                // Remove after animation
-                setTimeout(() => {
-                    snowflake.remove();
-                    // Recreate for continuous effect
-                    setTimeout(createSnowflakes, 1000); // Restart after delay
-                }, 5000);
-            }
-        }
+  username.textContent = name;
+  inputCard.style.display = 'none';
+  mainCard.style.display = 'block';
 
-        // Start snowfall with a slight delay for load
-        setTimeout(createSnowflakes, 1000);
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = `hsl(${Math.random()*360},100%,60%)`;
+    c.style.animationDuration = Math.random() * 2 + 2 + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+</script>
 
-        function openCard() {
-            const nameInput = document.getElementById('nameInput');
-            const name = nameInput.value.trim();
-            if (name) {
-                document.getElementById('userName').textContent = name;
-                document.getElementById('input-section').style.display = 'none';
-                document.getElementById('card-section').style.display = 'block';
-                
-                // Add enhanced confetti, fewer on mobile
-                const isMobile = window.innerWidth <= 480;
-                createConfetti(isMobile ? 25 : 50);
-            } else {
-                alert('Please enter your name to proceed! 😊');
-            }
-        }
-
-        function createConfetti(count) {
-            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
-            for (let i = 0; i < count; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDelay = Math.random() * 3 + 's';
-                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                document.body.appendChild(confetti);
-                
-                // Remove after animation
-                setTimeout(() => {
-                    confetti.remove();
-                }, 5000);
-            }
-        }
-
-        // Allow Enter key to submit
-        document.getElementById('nameInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                openCard();
-            }
-        });
-
-        // Prevent zoom on iOS for better UX
-        document.addEventListener('touchstart', function() {}, true);
-    </script>
 </body>
 </html>
